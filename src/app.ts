@@ -24,7 +24,7 @@ export class App {
         // Middleware configuration
         this.app.use(express.json()); 
         this.app.use(morgan('dev'));
-        this.app.use(cors());
+        this.app.use(cors({ origin: 'https://f89e1170b6bf.ngrok.app' }));
     }
 
     routes() {
