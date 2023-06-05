@@ -16,19 +16,21 @@ exports.connect = void 0;
 const promise_1 = require("mysql2/promise");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const dbHost = process.env.DB_HOST;
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbName = process.env.DB_NAME;
-//Database configuration
+const host = process.env.DB_HOST;
+const user = process.env.DB_USERNAME;
+const pass = process.env.DB_PASSWORD;
+const dbName = process.env.DB_DBNAME;
+// Database configuration
 function connect() {
     return __awaiter(this, void 0, void 0, function* () {
         const connection = yield (0, promise_1.createPool)({
-            host: dbHost,
-            user: dbUser,
-            password: dbPassword,
+            host: host,
+            user: user,
+            password: pass,
             database: dbName,
-            connectionLimit: 100
+            ssl: {
+                rejectUnauthorized: false,
+            }
         });
         return connection;
     });
