@@ -30,15 +30,17 @@ function createUser(req, res) {
         try {
             const conn = yield (0, database_1.connect)();
             const newUser = req.body;
-            // console.log(newUser);
             // Validations of the user
             if (!validationsCreateUser(newUser)) {
                 return res.status(400).json({ error: 'Invalid user data' });
             }
-            //Insert
+            // Convertir la fecha a tipo Date
+            const birthDate = new Date(newUser.birth);
+            newUser.birth = birthDate;
+            // Insertar en la base de datos
             yield conn.query('INSERT INTO users SET ?', [newUser]);
             return res.json({
-                message: "User created successfully"
+                message: 'User created successfully',
             });
         }
         catch (error) {
@@ -86,8 +88,11 @@ function updateUser(req, res) {
             const id = req.params.userId;
             const updateUser = req.body;
             const conn = yield (0, database_1.connect)();
-            yield conn.query("UPDATE users SET ? WHERE id = ?", [updateUser, id]);
-            return res.json({ message: "User updated successfully", UserUpdated: updateUser });
+            // Convertir la fecha a tipo Date
+            const birthDate = new Date(updateUser.birth);
+            updateUser.birth = birthDate;
+            yield conn.query('UPDATE users SET ? WHERE id = ?', [updateUser, id]);
+            return res.json({ message: 'User updated successfully', UserUpdated: updateUser });
         }
         catch (error) {
             console.log(error);

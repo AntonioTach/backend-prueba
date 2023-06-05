@@ -33,7 +33,8 @@ class App {
         // Middleware configuration
         this.app.use(express_1.default.json());
         this.app.use((0, morgan_1.default)('dev'));
-        this.app.use((0, cors_1.default)({ origin: 'https://f89e1170b6bf.ngrok.app' }));
+        // this.app.use(cors({ origin: 'http://localhost:4200' }));
+        this.app.use((0, cors_1.default)({ origin: 'https://73c1edebfb4e.ngrok.app' }));
     }
     routes() {
         this.app.use('/users', user_routes_1.default);

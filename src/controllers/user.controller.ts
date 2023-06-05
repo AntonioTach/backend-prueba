@@ -15,28 +15,31 @@ export async function getUsers(_req: Request, res: Response): Promise<Response>{
     }
 }
 
-export async function createUser(req: Request, res: Response){
+export async function createUser(req: Request, res: Response) {
     try {
-        const conn = await connect();
-        const newUser: User = req.body;
-        // console.log(newUser);
-
-        // Validations of the user
-        if (!validationsCreateUser(newUser)) {
-            return res.status(400).json({ error: 'Invalid user data' });
-        }
-
-        //Insert
-        await conn.query('INSERT INTO users SET ?', [newUser]);
-        
-        return res.json({
-            message: "User created successfully"
-        });
+      const conn = await connect();
+      const newUser: User = req.body;
+  
+      // Validations of the user
+      if (!validationsCreateUser(newUser)) {
+        return res.status(400).json({ error: 'Invalid user data' });
+      }
+  
+      // Convertir la fecha a tipo Date
+      const birthDate = new Date(newUser.birth);
+      newUser.birth = birthDate;
+  
+      // Insertar en la base de datos
+      await conn.query('INSERT INTO users SET ?', [newUser]);
+  
+      return res.json({
+        message: 'User created successfully',
+      });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+  }
 
 export async function getUser(req: Request, res: Response): Promise<Response> {
     try {
@@ -66,16 +69,23 @@ export async function deleteUser(req: Request, res: Response) {
 
 export async function updateUser(req: Request, res: Response) {
     try {
-        const id = req.params.userId;
-        const updateUser: User = req.body;
-        const conn = await connect(); 
-        await conn.query("UPDATE users SET ? WHERE id = ?", [updateUser, id]);
-        return res.json({ message: "User updated successfully", UserUpdated: updateUser });
+      const id = req.params.userId;
+      const updateUser: User = req.body;
+      const conn = await connect();
+  
+      // Convertir la fecha a tipo Date
+      const birthDate = new Date(updateUser.birth);
+      updateUser.birth = birthDate;
+  
+      await conn.query('UPDATE users SET ? WHERE id = ?', [updateUser, id]);
+  
+      return res.json({ message: 'User updated successfully', UserUpdated: updateUser });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+  }
+  
 
 function validationsCreateUser(user: User): boolean {
     const birthDate: Date = new Date(user.birth);
