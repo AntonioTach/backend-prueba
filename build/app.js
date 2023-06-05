@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
+const cors_1 = __importDefault(require("cors"));
 //Routes
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 class App {
@@ -32,6 +33,7 @@ class App {
         // Middleware configuration
         this.app.use(express_1.default.json());
         this.app.use((0, morgan_1.default)('dev'));
+        this.app.use((0, cors_1.default)({ origin: 'http://localhost:4200' }));
     }
     routes() {
         this.app.use('/users', user_routes_1.default);
